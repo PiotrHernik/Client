@@ -12,10 +12,13 @@ import java.net.Socket;
 public class CommunicationWithServer {
     private Socket socket;
     private String message;
-    PrintStream output;
-    BufferedReader input;
-    public CommunicationWithServer(Socket socket){
+    private PrintStream output;
+    private BufferedReader input;
+    private final int squereSize;
+
+    public CommunicationWithServer(Socket socket, int squereSize){
         this.socket = socket;
+        this.squereSize = squereSize;
         try{
             this.output = new PrintStream(socket.getOutputStream());
             this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -36,32 +39,26 @@ public class CommunicationWithServer {
             System.out.println("IOException: " + e.getMessage());
         }
     }
-    public void sendToServer(double x, double y){
-        System.out.println(x);
-        System.out.println(y);
+    public void sendToServer(Object object){
+        if(object instanceof Point2D) {
+            Point2D point = (Point2D) object;
+            double x = point.getX();
+            double y = point.getY();
+            System.out.println(x);
+            System.out.println(y);
 
-        int countX = 0;
-        int countY = 0;
-        while(x >= 1){
-            x -= 1;
-            countX++;
-        }
-        while(y >= 1){
-            y -= 1;
-            countY++;
-        }
-        if(x >= 0.5){
-            countX++;
-        }
-        if(y >= 0.5){
-            countY++;
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(countX);
-        stringBuilder.append(countY);
+            int countX = (int) (x / squereSize);
+            if(x % squereSize > (double)(squereSize / 2)){
+                countX++;
+            }
+            int countY = (int) (y / squereSize);
+            if(y % squereSize > (double)(squereSize / 2)){
+                countY++;
+            }
+            Object point2D = new Point2D(countX, countY);
 
-        output.println(stringBuilder);
-
+            output.println(point2D);
+        }
     }
 
 }
