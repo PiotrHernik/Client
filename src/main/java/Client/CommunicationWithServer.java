@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Objects;
 
 public class CommunicationWithServer {
     private Socket socket;
@@ -15,6 +16,7 @@ public class CommunicationWithServer {
     private PrintStream output;
     private BufferedReader input;
     private final int squereSize;
+    private boolean stop = false;
 
     public CommunicationWithServer(Socket socket, int squereSize){
         this.socket = socket;
@@ -30,7 +32,7 @@ public class CommunicationWithServer {
     public void startListen(){
         try {
 
-            while(true){
+            while(!stop){
                 message = input.readLine();
                 System.out.println(message);
             }
@@ -59,6 +61,13 @@ public class CommunicationWithServer {
 
             output.println(point2D);
         }
+        else{
+
+            output.println(object);
+        }
+    }
+    public void stopListen(){
+        stop = true;
     }
 
 }

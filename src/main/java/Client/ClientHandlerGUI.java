@@ -109,8 +109,10 @@ public class ClientHandlerGUI extends Application {
         exit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                communicationWithServer.stopListen();
                 communicationWithServer.sendToServer("Exit");
                 System.out.println("exit");
+                System.exit(0);
             }
         });
 
